@@ -10,6 +10,7 @@ import ru.yandex.practicum.catsgram.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,6 +27,17 @@ public class PostService {
     public List<Post> findAll() {
         log.debug("Текущее количество постов: {}", posts.size());
         return posts;
+    }
+
+    public List<Post> findAll(Integer size, Integer from, String sort) {
+        log.debug("Параметры поиска постов: size = {},  from = {}, sort = {}", size, from, sort);
+        return posts.stream().sorted((p0, p1) -> {
+            int comp = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
+            if (sort.equals("desc")) {
+                comp = -1 * comp; //обратный порядок сортировки
+            }
+            return comp;
+        }).skip(from).limit(size).collect(Collectors.toList());
     }
 
     public Post create(Post post) {
@@ -50,7 +62,7 @@ public class PostService {
         throw new PostNotFoundException("Пост с id = " + postId + " не найден");
     }
 
-    private static Integer getNextId(){
+    private static Integer getNextId() {
         return globalId++;
     }
 }
