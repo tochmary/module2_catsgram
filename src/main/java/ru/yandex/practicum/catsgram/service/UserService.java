@@ -18,7 +18,7 @@ public class UserService {
         return users.values();
     }
 
-    public User create(User user) throws InvalidEmailException, UserAlreadyExistException {
+    public User create(User user) {
         String email = user.getEmail();
         checkEmail(email);
         checkUser(user);
@@ -27,7 +27,7 @@ public class UserService {
         return user;
     }
 
-    public User update(User user) throws InvalidEmailException {
+    public User update(User user) {
         String email = user.getEmail();
         checkEmail(user.getEmail());
         users.put(email, user);
@@ -39,10 +39,14 @@ public class UserService {
         if (email == null) {
             return null;
         }
-        return users.get(email);
+        User user = users.get(email);
+        if (user == null) {
+            log.debug("Не найден пользователь с email: {}", email);
+        }
+        return user;
     }
 
-    private void checkEmail(String email) throws InvalidEmailException {
+    private void checkEmail(String email) {
         //Если в переданных данных отсутствует адрес электронной почты (например, равен null или пустой строке),
         // то генерируется исключение InvalidEmailException.
         if (email == null || email.isBlank()) {
@@ -50,7 +54,7 @@ public class UserService {
         }
     }
 
-    private void checkUser(User user) throws UserAlreadyExistException {
+    private void checkUser(User user) {
         //Если пользователь с указанным адресом электронной почты уже был добавлен ранее,
         // то генерируется исключение UserAlreadyExistException.
         if (users.containsKey(user.getEmail())) {

@@ -2,13 +2,10 @@ package ru.yandex.practicum.catsgram.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.catsgram.exception.InvalidEmailException;
-import ru.yandex.practicum.catsgram.exception.UserAlreadyExistException;
 import ru.yandex.practicum.catsgram.model.User;
 import ru.yandex.practicum.catsgram.service.UserService;
 
 import java.util.Collection;
-import java.util.Set;
 
 /*
 Добавьте в приложение класс UserController. Добавьте в него следующие эндпоинты.
@@ -42,15 +39,20 @@ public class UserController {
         return userService.findAll();
     }
 
+    @GetMapping("/user/{userMail}")
+    public User getUser(@PathVariable("userMail") String userMail){
+        return userService.findUserByEmail(userMail);
+    }
+
     //POST /users — для добавления нового пользователя в список.
     @PostMapping
-    public User create(@RequestBody User user) throws InvalidEmailException, UserAlreadyExistException {
+    public User create(@RequestBody User user) {
         return userService.create(user);
     }
 
     //PUT /users — для добавления нового пользователя или обновления значения полей существующего.
     @PutMapping
-    public User update(@RequestBody User user) throws InvalidEmailException {
+    public User update(@RequestBody User user) {
         return userService.update(user);
     }
 }
