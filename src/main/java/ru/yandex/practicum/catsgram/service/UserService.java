@@ -6,51 +6,40 @@ import ru.yandex.practicum.catsgram.exception.InvalidEmailException;
 import ru.yandex.practicum.catsgram.exception.UserAlreadyExistException;
 import ru.yandex.practicum.catsgram.model.User;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
 public class UserService {
-    private final Set<User> users = new HashSet<>();
+    private final Map<String, User> users = new HashMap<>();
 
-    public Set<User> findAll() {
+    public Collection<User> findAll() {
         log.debug("Текущее количество пользователей: {}", users.size());
-        return users;
+        return users.values();
     }
 
     public User create(User user) throws InvalidEmailException, UserAlreadyExistException {
-        checkEmail(user.getEmail());
+        String email = user.getEmail();
+        checkEmail(email);
         checkUser(user);
-        users.add(user);
+        users.put(email, user);
         log.debug("Добавлен пользователь: {}", user);
         return user;
     }
 
     public User update(User user) throws InvalidEmailException {
+        String email = user.getEmail();
         checkEmail(user.getEmail());
-        if (users.contains(user)) {
-            for (User u : users) {
-                if (u.equals(user)) {
-                    u.setNickname(user.getNickname());
-                    u.setBirthdate(user.getBirthdate());
-                }
-            }
-            log.debug("Обновлен пользователь: {}", user);
-        } else {
-            users.add(user);
-            log.debug("Добавлен пользователь: {}", user);
-        }
+        users.put(email, user);
+        log.debug("Обновлен пользователь: {}", user);
         return user;
     }
 
     public User findUserByEmail(String email) {
-        for (User user : users) {
-            if (email.equals(user.getEmail())) {
-                return user;
-            }
+        if (email == null) {
+            return null;
         }
-        return null;
+        return users.get(email);
     }
 
     private void checkEmail(String email) throws InvalidEmailException {
@@ -64,7 +53,7 @@ public class UserService {
     private void checkUser(User user) throws UserAlreadyExistException {
         //Если пользователь с указанным адресом электронной почты уже был добавлен ранее,
         // то генерируется исключение UserAlreadyExistException.
-        if (users.contains(user)) {
+        if (users.containsKey(user.getEmail())) {
             throw new UserAlreadyExistException("Пользователь с указанным адресом электронной почты уже был добавлен ранее!");
         }
     }

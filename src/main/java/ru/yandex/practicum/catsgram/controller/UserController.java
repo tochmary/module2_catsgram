@@ -38,7 +38,7 @@ public class UserController {
 
     //GET /users — для получения списка пользователей.
     @GetMapping
-    public Set<User> findAll() {
+    public Collection<User> findAll() {
         return userService.findAll();
     }
 
