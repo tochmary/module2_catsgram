@@ -18,7 +18,7 @@ public class UserService {
         return users.values();
     }
 
-    public User create(User user) {
+    public User createUser(User user) {
         String email = user.getEmail();
         checkEmail(email);
         checkUser(user);
@@ -27,7 +27,7 @@ public class UserService {
         return user;
     }
 
-    public User update(User user) {
+    public User updateUser(User user) {
         String email = user.getEmail();
         checkEmail(user.getEmail());
         users.put(email, user);

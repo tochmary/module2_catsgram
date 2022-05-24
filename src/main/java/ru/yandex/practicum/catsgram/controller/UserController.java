@@ -46,13 +46,13 @@ public class UserController {
 
     //POST /users — для добавления нового пользователя в список.
     @PostMapping
-    public User create(@RequestBody User user) {
-        return userService.create(user);
+    public User createUser(@RequestBody User user) {
+        return userService.createUser(user);
     }
 
     //PUT /users — для добавления нового пользователя или обновления значения полей существующего.
     @PutMapping
-    public User update(@RequestBody User user) {
-        return userService.update(user);
+    public User updateUser(@RequestBody User user) {
+        return userService.updateUser(user);
     }
 }
