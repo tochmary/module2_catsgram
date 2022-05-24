@@ -28,7 +28,7 @@ public class PostController {
             throw new IllegalArgumentException();
         }
         Integer from = page * size;
-        return postService.findAll(size, from, sort);
+        return postService.findPostById(size, from, sort);
     }
 
     @GetMapping("/posts/{postId}")

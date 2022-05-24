@@ -29,7 +29,7 @@ public class PostService {
         return posts;
     }
 
-    public List<Post> findAll(Integer size, Integer from, String sort) {
+    public List<Post> findPostById(Integer size, Integer from, String sort) {
         log.debug("Параметры поиска постов: size = {},  from = {}, sort = {}", size, from, sort);
         return posts.stream().sorted((p0, p1) -> {
             int comp = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
@@ -38,6 +38,17 @@ public class PostService {
             }
             return comp;
         }).skip(from).limit(size).collect(Collectors.toList());
+    }
+
+    public List<Post> findAllByUserEmail(String email, Integer size, String sort) {
+        log.debug("Параметры поиска постов: email = {},  size = {}, sort = {}", email, size, sort);
+        return posts.stream().filter(p -> p.getAuthor().equals(email)).sorted((p0, p1) -> {
+            int comp = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
+            if (sort.equals("desc")) {
+                comp = -1 * comp; //обратный порядок сортировки
+            }
+            return comp;
+        }).limit(size).collect(Collectors.toList());
     }
 
     public Post create(Post post) {
