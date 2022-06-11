@@ -5,24 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.catsgram.model.User;
 import ru.yandex.practicum.catsgram.service.UserService;
 
-import java.util.Collection;
+import java.util.Optional;
 
-/*
-Добавьте в приложение класс UserController. Добавьте в него следующие эндпоинты.
-GET /users — для получения списка пользователей.
-POST /users — для добавления нового пользователя в список.
-При этом нужно учесть исключения:
-Если пользователь с указанным адресом электронной почты уже был добавлен ранее, то генерируется исключение UserAlreadyExistException.
-Если в переданных данных отсутствует адрес электронной почты (например, равен null или пустой строке), то генерируется исключение InvalidEmailException.
-Оба исключения UserAlreadyExistException и InvalidEmailException нужно создать самостоятельно.
-PUT /users — для добавления нового пользователя или обновления значения полей существующего.
-Учтите, что если в переданных данных отсутствует адрес электронной почты, то генерируется исключение InvalidEmailException.
-Используйте аннотацию @RequestMapping на уровне класса UserController,
-чтобы задать единый путь ко всем эндпоинтам.
-В эндпоинтах используйте аннотации @GetMapping, @PostMapping и @PutMapping.
-Также вам понадобится аннотация @RequestBody.
-Для хранения данных используйте HashSet или HashMap.
- */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -33,26 +17,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    //GET /users — для получения списка пользователей.
-    @GetMapping
-    public Collection<User> findAll() {
-        return userService.findAll();
-    }
-
-    @GetMapping("/user/{userMail}")
-    public User getUser(@PathVariable("userMail") String userMail){
-        return userService.findUserByEmail(userMail);
-    }
-
-    //POST /users — для добавления нового пользователя в список.
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
-    }
-
-    //PUT /users — для добавления нового пользователя или обновления значения полей существующего.
-    @PutMapping
-    public User updateUser(@RequestBody User user) {
-        return userService.updateUser(user);
+    @GetMapping("/{login}")
+    public Optional<User> getUser(@PathVariable String login){
+        return userService.findUserById(login);
     }
 }

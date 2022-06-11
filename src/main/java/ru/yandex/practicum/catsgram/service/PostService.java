@@ -28,10 +28,10 @@ public class PostService {
     }
 
     public Post create(Post post) {
-        User postAuthor = userService.findUserByEmail(post.getAuthor());
-        if (postAuthor == null) {
-            throw new UserNotFoundException("Пользователь " + post.getAuthor() + " не найден");
-        }
+        userService.findUserById(post.getAuthor())
+                .orElseThrow(() ->
+                        new UserNotFoundException(String.format("Пользователь %s не найден", post.getAuthor()))
+                );
         post.setId(getNextId());
         posts.add(post);
         log.debug("Добавлен пост: {}", post);
